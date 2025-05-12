@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: collabtasks
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn app:app --chdir backend
+    envVars:
+      - key: PORT
+        value: 10000
+    plan: free
