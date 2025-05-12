@@ -1,10 +1,18 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import json
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend')
 CORS(app)
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 # Load tasks from file or create default
 def load_tasks():
@@ -116,5 +124,9 @@ def delete_task(category, task_id):
     
     return jsonify(removed_task), 200
 
+
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)
+
